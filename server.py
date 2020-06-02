@@ -1,26 +1,40 @@
-import flask
-import config
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
+from flask_cors import CORS
+import whale
 
-import db
+db = SQLAlchemy()
 
-app = flask.Flask(__name__)
+def create_app():
+    app = Flask(__name__)
+    CORS(app)
 
+    app.config['SECRET_KEY']='thisismysecretkey'
+    app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///db.sqlite3'
 
-@app.route('/')
-def hello_world():
-    return flask.render_template("index.html", card_info="Display video here.")
+    db.init_app(app)
+
+    login_manager =  LoginManager()
+    login_manager.login_view = 'pages.login'
+    login_manager.init_app(app)
+
+    from models import User
+    @login_manager.user_loader
+    def load_user(user_id):
+        return User.query.get(int(user_id))
+
+    from pages import flask_app as flask_app_pages
+    app.register_blueprint(flask_app_pages)
+
+    return app
 
 
 if __name__ == '__main__':
     def main():
-        # app.run(debug=config.debug)
-        app.run(debug=False)
-
-    def db_test_main():
-        session = db.SqlAlchemySession()
-        user = session.query(db.User).filter_by(id=1).first()
-        session.commit()
-        print(repr(user))
+        app = create_app()
+        whale.init()
+        whale.route(flask_app=app)
+        app.run(debug=True)
 
     main()
-    # db_test_main()

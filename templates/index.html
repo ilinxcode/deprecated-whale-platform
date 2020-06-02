@@ -1,39 +1,44 @@
 {% extends "base.html" %}
 
-{% block title %}Welcome to Whale.{% endblock %}
-
-{% block head %}
-    {{ super() }}
+{% block style %}
 {% endblock %}
 
-{% block content %}
-    <div class="container-fluid">
+{% block title %}HOME{% endblock %}
 
-        <div class="row">
-            <span class="col-lg-12 text-center" id="whale-title">whale</span>
-        </div>
+{% block header %}
+<p style="padding-left:150px">We're pushing what fun can be.</p>
+{% endblock %}
 
-        <div class="row">
-            <h5 class="caption-section">Watch</h5>
-        </div>
-        <div class="row">
-            <div class="col-lg-8 h-scroll-menu">
-                <span class="lg-scroll-menu-item rounded-card" style="background: red"></span>
-                <span class="lg-scroll-menu-item rounded-card" style="background: darkgoldenrod"></span>
-                <span class="lg-scroll-menu-item rounded-card" style="background: maroon"></span>
-                <span class="lg-scroll-menu-item rounded-card" style="background: grey"></span>
-                <span class="lg-scroll-menu-item rounded-card" style="background: darkblue"></span>
-            </div>
-        </div>
-        <div class="row">
-            <div class="rounded-section">
-                <h5 class="col-12-lg">Read</h5>
-            </div>
-        </div>
-        <div class="row">
-            <div class="rounded-panel">
-                <span class="col-12-lg">Hello, there.</span>
-            </div>
-        </div>
+{% block body %}
+{% if not current_user.is_authenticated %}
+<div class="box" style="float: right">
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div>
+        {{ messages[0] }}
     </div>
-{% endblock content %}
+    {% endif %}
+    {% endwith %}
+    <form method="POST" action="/login_post2">
+        <div class="control">
+            <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="" style="padding: 0; margin: 0;">
+        </div>
+
+        <div class="control">
+            <input class="input is-large" type="password" name="password" placeholder="Your Password" style="padding: 0; margin: 0;">
+        </div>
+        <div class="field">
+            <input type="checkbox">
+            Remember me
+        </div>
+        <button class="button is-block is-info is-large is-fullwidth" style="padding: 0; margin: 0; background-color: darkcyan">Login</button>
+    </form>
+</div>
+{% endif %}
+<h1>
+    HOME PAGE
+</h1>
+<h2 class="subtitle">
+    HOME
+</h2>
+{% endblock %}
